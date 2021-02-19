@@ -107,9 +107,7 @@ export default {
       let url = `${baseUrl}?q=${encodeURI(this.searchText)}&startIndex=${
         this.startIndex
       }&maxResults=${this.pageSize}&filter=ebooks&key=${this.apiKey}`;
-      console.log(url);
       let response = await fetch(url);
-      console.log(response.status);
       if (response.status === 200) {
         return await response.json();
       } else {
@@ -124,7 +122,6 @@ export default {
       // Get data
       if (this.searchText.length > 0) {
         let data = await this.getBooks();
-        console.log(data);
         if (typeof data != "undefined") {
           if (data.totalItems > 0) {
             this.totalItems = data.totalItems;
