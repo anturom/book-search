@@ -82,7 +82,7 @@ export default {
   computed: {
     isPrevButtonVisible() {
       // Don't show a previous button if we are on the first page
-      return this.startIndex == 0 || this.books != "undefined" ? false : true;
+      return this.startIndex == 0 ? false : true;
     },
     isNextButtonVisible() {
       // NOTE: Google Books API has a strange quirk in that it may return the total items incorrectly
