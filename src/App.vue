@@ -11,39 +11,16 @@
     </button>
   </form>
   <div v-html="statusEl" id="search-status"></div>
-  <!-- <form class="filter-controls">
-            <select id="select-saleability">
-                <option value="free">free</option>
-                <option value="paid">paid</option>
-            </select>
-            <select id="select-lang">
-                <option value="en">english</option>
-                <option value="de">deutsch</option>
-                <option value="ro">română</option>
-            </select>
-            <select id="select-sorting">
-                <option value="relevance">relevance</option>
-                <option value="newest">newest</option>
-            </select>
-        </form> -->
   <div v-bind="container" id="container">
-    <article v-for="item in books" :key="item.volumeInfo.id" class="book">
-      <a target="blank" v-bind:href="item.volumeInfo.canonicalVolumeLink"
-        ><img
-          v-bind:src="item.volumeInfo.imageLinks.thumbnail"
-          v-bind:alt="item.volumeInfo.title"
-      /></a>
-      <h2>
-        <a
-          target="blank"
-          v-bind:href="item.volumeInfo.canonicalVolumeLink"
-          v-bind:title="item.volumeInfo.title"
-          >{{ item.volumeInfo.title }}</a
-        >
-      </h2>
-      <div class="authors">{{ renderAuthors(item.volumeInfo.authors) }}</div>
-      <div class="price">{{ renderPrice(item.saleInfo) }}</div>
-    </article>
+    <book-info
+      v-for="item in books"
+      :key="item.volumeInfo.id"
+      :title="item.volumeInfo.title"
+      :link="item.volumeInfo.canonicalVolumeLink"
+      :image-links="item.volumeInfo.imageLinks"
+      :authors="item.volumeInfo.authors"
+      :sale-info="item.saleInfo"
+    ></book-info>
   </div>
   <form class="nav-controls">
     <button
@@ -71,7 +48,7 @@ export default {
     return {
       apiKey: "AIzaSyDNapzMf6XaGZxZfBjub4zvjVFAzmghm-w",
       startIndex: 0,
-      pageSize: 6,
+      pageSize: 36,
       totalItems: 0,
       searchText: "",
       statusEl: "",
@@ -132,29 +109,6 @@ export default {
         }
       } else {
         this.statusEl = `<span class="error-message">Please enter a search term.</span>`;
-      }
-    },
-    renderAuthors(authors) {
-      if (typeof authors != "undefined") {
-        let htmlSegment = ``;
-        authors.forEach((author) => {
-          htmlSegment += `${author}, `;
-        });
-        // strip the last comma and space
-        return htmlSegment.slice(0, htmlSegment.length - 2);
-      } else {
-        return "";
-      }
-    },
-    renderPrice(saleInfo) {
-      if (saleInfo.saleability === "FREE") {
-        return `FREE`;
-      } else if (saleInfo.saleability === "FOR_SALE") {
-        return `${saleInfo.retailPrice.amount} ${saleInfo.retailPrice.currencyCode}`;
-      } else if (saleInfo.saleability === "FOR_PREORDER") {
-        return `FOR PREORDER`;
-      } else {
-        return `NOT FOR SALE`;
       }
     },
     showPreviousPage() {
@@ -224,49 +178,6 @@ header {
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
 }
 
-.book {
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 0.5rem;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-auto-rows: minmax(auto, 1.8rem) minmax(auto, 1fr) minmax(auto, 1.5rem);
-  gap: 0.2rem 0.5rem;
-}
-
-.book a {
-  grid-row: span 3;
-}
-
-.book > .authors {
-  font-size: small;
-  font-style: italic;
-  white-space: nowrap;
-  overflow: hidden;
-  color: cadetblue;
-}
-
-.book h2 {
-  margin: 0.3rem 0;
-  font-size: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.book > h2 > a {
-  text-decoration: none;
-  color: black;
-}
-
-.book > .price {
-  text-align: end;
-  color: brown;
-  font-size: 0.8rem;
-  font-weight: bold;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
 .info-message {
   color: gray;
 }
@@ -308,8 +219,6 @@ input {
   border: 1px solid #88005b;
   background-color: antiquewhite;
   padding: 0.5rem;
-  /* border-radius: 12px; */
   width: 10rem;
-  /* box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.26); */
 }
 </style>
