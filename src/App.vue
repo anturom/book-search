@@ -1,7 +1,7 @@
 <template>
   <form class="search-controls">
     <input
-      v-model="searchText"
+      v-model.lazy="searchText"
       placeholder="Enter a search term"
       id="searchText"
       type="text"
@@ -11,10 +11,10 @@
     </button>
   </form>
   <div v-html="statusEl" id="search-status"></div>
-  <div v-bind="container" id="container">
+  <div id="container">
     <book-info
       v-for="item in books"
-      :key="item.volumeInfo.id"
+      :key="item.id"
       :title="item.volumeInfo.title"
       :link="item.volumeInfo.canonicalVolumeLink"
       :image-links="item.volumeInfo.imageLinks"
@@ -48,11 +48,10 @@ export default {
     return {
       apiKey: "AIzaSyDNapzMf6XaGZxZfBjub4zvjVFAzmghm-w",
       startIndex: 0,
-      pageSize: 36,
+      pageSize: 24,
       totalItems: 0,
       searchText: "",
       statusEl: "",
-      container: "",
       books: [],
     };
   },
@@ -76,6 +75,12 @@ export default {
       } else {
         return false;
       }
+    },
+  },
+  watch: {
+    // Whenever user searches for a new term, reset the start index to 0
+    searchText() {
+      this.startIndex = 0;
     },
   },
   methods: {

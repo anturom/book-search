@@ -29,7 +29,7 @@ export default {
     },
     authors: {
       type: Array,
-      required: true,
+      required: false,
     },
     saleInfo: {
       type: Object,
