@@ -8,7 +8,6 @@ To run the app locally, make sure that the following prerequisites are installed
 
 - [node.js](https://nodejs.org/en/)
 - [npm](https://www.npmjs.com/)
-- [Vue CLI](https://cli.vuejs.org/)
 
 ## How to run the app locally
 
