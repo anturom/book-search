@@ -10,6 +10,12 @@
       Search
     </button>
   </form>
+  <search-filters
+    :areFiltersVisible="areFiltersVisible"
+    @on-price-select="filterPrice"
+    @on-lang-select="filterLanguage"
+    @on-order-select="changeOrder"
+  ></search-filters>
   <div v-html="statusEl" id="search-status"></div>
   <div id="container">
     <book-info
@@ -53,6 +59,10 @@ export default {
       searchText: "",
       statusEl: "",
       books: [],
+      filter: "ebooks",
+      langRestrict: "",
+      orderBy: "relevance",
+      areFiltersVisible: false
     };
   },
   computed: {
@@ -75,7 +85,7 @@ export default {
       } else {
         return false;
       }
-    },
+    }
   },
   watch: {
     // Whenever user searches for a new term, reset the start index to 0
@@ -88,7 +98,9 @@ export default {
       let baseUrl = "https://www.googleapis.com/books/v1/volumes";
       let url = `${baseUrl}?q=${encodeURI(this.searchText)}&startIndex=${
         this.startIndex
-      }&maxResults=${this.pageSize}&filter=ebooks&key=${this.apiKey}`;
+      }&maxResults=${this.pageSize}&filter=${this.filter}&langRestrict=${
+        this.langRestrict
+      }&orderBy=${this.orderBy}&key=${this.apiKey}`;
       let response = await fetch(url);
       if (response.status === 200) {
         return await response.json();
@@ -103,13 +115,14 @@ export default {
 
       // Get data
       if (this.searchText.length > 0) {
+        this.areFiltersVisible = true;
         let data = await this.getBooks();
         if (typeof data != "undefined") {
           if (data.totalItems > 0) {
             this.totalItems = data.totalItems;
             this.books = data.items;
           } else {
-            this.statusEl = `<span class="info-message">The search returned no results. Please enter a different text.</span>`;
+            this.statusEl = `<span class="info-message">The search returned no results. Please change the search criteria.</span>`;
           }
         }
       } else {
@@ -124,6 +137,21 @@ export default {
     },
     showNextPage() {
       this.startIndex += this.pageSize;
+      this.renderBooks();
+    },
+    filterPrice(price) {
+      this.filter = price;
+      this.startIndex = 0;
+      this.renderBooks();
+    },
+    filterLanguage(lang) {
+      this.langRestrict = lang;
+      this.startIndex = 0;
+      this.renderBooks();
+    },
+    changeOrder(order) {
+      this.orderBy = order;
+      this.startIndex = 0;
       this.renderBooks();
     },
   },
@@ -166,7 +194,6 @@ body {
 
 .search-controls,
 .nav-controls,
-.filter-controls,
 #search-status {
   margin: 10px auto;
   text-align: center;
@@ -221,9 +248,9 @@ button:active {
 
 input {
   font: inherit;
-  border: 1px solid #88005b;
-  background-color: antiquewhite;
+  border: solid 1px rgb(212, 203, 203);
+  border-radius: 8px;
+  padding: 0.2rem;
   padding: 0.5rem;
-  width: 10rem;
 }
 </style>
