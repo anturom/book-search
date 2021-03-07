@@ -10,12 +10,17 @@
       Search
     </button>
   </form>
-  <search-filters
-    :areFiltersVisible="areFiltersVisible"
-    @on-price-select="filterPrice"
-    @on-lang-select="filterLanguage"
-    @on-order-select="changeOrder"
-  ></search-filters>
+  <div v-if="isLoading" style="text-align: center">
+    <img src="./assets/spinner.jpg" alt="Loading..." />
+  </div>
+  <keep-alive>
+    <search-filters
+      v-if="!isLoading && books && books.length > 0"
+      @on-price-select="filterPrice"
+      @on-lang-select="filterLanguage"
+      @on-order-select="changeOrder"
+    ></search-filters>
+  </keep-alive>
   <div v-html="statusEl" id="search-status"></div>
   <div id="container">
     <book-info
@@ -28,7 +33,7 @@
       :sale-info="item.saleInfo"
     ></book-info>
   </div>
-  <form class="nav-controls">
+  <form v-if="!isLoading" class="nav-controls">
     <button
       id="prevButton"
       v-if="isPrevButtonVisible"
@@ -62,7 +67,7 @@ export default {
       filter: "ebooks",
       langRestrict: "",
       orderBy: "relevance",
-      areFiltersVisible: false
+      isLoading: false,
     };
   },
   computed: {
@@ -85,7 +90,7 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   watch: {
     // Whenever user searches for a new term, reset the start index to 0
@@ -101,10 +106,16 @@ export default {
       }&maxResults=${this.pageSize}&filter=${this.filter}&langRestrict=${
         this.langRestrict
       }&orderBy=${this.orderBy}&key=${this.apiKey}`;
-      let response = await fetch(url);
+      this.isLoading = true;
+      let response = await fetch(url).catch((error) => {
+        this.isLoading = false;
+        this.statusEl = `<span class="error-message">${error}</span>`;
+      });
       if (response.status === 200) {
+        this.isLoading = false;
         return await response.json();
       } else {
+        this.isLoading = false;
         this.statusEl = `<span class="error-message">An error has occurred calling the Google Books API. HTTP status code: ${response.status}</span>`;
       }
     },
@@ -115,7 +126,6 @@ export default {
 
       // Get data
       if (this.searchText.length > 0) {
-        this.areFiltersVisible = true;
         let data = await this.getBooks();
         if (typeof data != "undefined") {
           if (data.totalItems > 0) {

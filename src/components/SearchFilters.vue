@@ -1,7 +1,6 @@
 <template>
   <form
     class="filter-controls"
-    :style="{ display: areFiltersVisible === true ? '' : 'none' }"
   >
     <label for="select-price">Price</label>
     <select id="select-price" @change="selectPrice" v-model="selectedPrice">
@@ -40,12 +39,6 @@ export default {
       selectedLanguage: "",
       orderBy: "relevance",
     };
-  },
-  props: {
-    areFiltersVisible: {
-      type: Boolean,
-      required: true,
-    },
   },
   emits: {
     "on-price-select": function (price) {
