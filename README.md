@@ -41,4 +41,4 @@ To build the app for production, run:
 npm run build
 ```
 
-> NOTE: You may need to edit the **vue.config.js** file in the root directory to specify a different public path for the app. Currently, the default public path is `/book-search/`.
+> NOTE: You may need to edit the **vue.config.js** file in the root directory to specify a different public path for the app. Currently, the default public path is `/`.
