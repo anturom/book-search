@@ -57,7 +57,6 @@
 export default {
   data() {
     return {
-      apiKey: "AIzaSyDNapzMf6XaGZxZfBjub4zvjVFAzmghm-w",
       startIndex: 0,
       pageSize: 24,
       totalItems: 0,
@@ -105,7 +104,7 @@ export default {
         this.startIndex
       }&maxResults=${this.pageSize}&filter=${this.filter}&langRestrict=${
         this.langRestrict
-      }&orderBy=${this.orderBy}&key=${this.apiKey}`;
+      }&orderBy=${this.orderBy}&key=${process.env.VUE_APP_API_KEY}`;
       this.isLoading = true;
       let response = await fetch(url).catch((error) => {
         this.isLoading = false;

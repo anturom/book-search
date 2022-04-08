@@ -27,7 +27,9 @@ Once you have installed the prerequisites:
 
     This command will create the **node_modules** directory which stores all of the project's depedencies.
 
-3. You can now start the local development server with:
+3. Rename the `.env_sample` file to `.env` and set the value of the `VUE_APP_API_KEY` to your Google Books API key. This key can be obtained from [https://developers.google.com/books/](https://developers.google.com/books/)
+
+4. You can now start the local development server with:
 
     ```cmd
     npm run serve
@@ -41,4 +43,4 @@ To build the app for production, run:
 npm run build
 ```
 
-> NOTE: You may need to edit the **vue.config.js** file in the root directory to specify a different public path for the app. Currently, the default public path is `/`.
+> NOTE: Before you deploy to production, you may need to edit the **vue.config.js** file in the root directory to specify a different public path for the app. Currently, the default public path is `/`.
